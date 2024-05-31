@@ -2,3 +2,6 @@ venv/
 **__pycache__/
 djchat/db.sqlite3
 .env
+media/
+djchat/server/migrations
+djchat/account/migrations
