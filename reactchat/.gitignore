@@ -1,14 +1,3 @@
-#DJACHAT BACKEND
-venv/
-**__pycache__/
-djchat/db.sqlite3
-djchat/.env
-media/
-djchat/server/migrations
-djchat/account/migrations
-migrations/
-
-#REACTCHAT FRONTEND
 # Logs
 logs
 *.log
