@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import Count
 
@@ -17,6 +18,7 @@ from .schemas import server_list_docs
 # Create your views here.
 
 class ServerView(APIView):
+    permission_classes = [IsAuthenticated]
     @server_list_docs
     def get(self, request):
         """
