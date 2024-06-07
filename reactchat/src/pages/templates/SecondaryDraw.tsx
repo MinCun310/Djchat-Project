@@ -8,7 +8,7 @@ const SecondaryDraw = () => {
     const theme = useTheme();
     const jwtAxios = useAxiosWithInterceptor();
 
-    jwtAxios.get('http://127.0.0.1:8000/api/djchat/server/category?category=c1').then((response) => {
+    jwtAxios.get('http://127.0.0.1:8000/api/djchat/server').then((response) => {
         console.log(response.data);
     }).catch((error) => {
         console.log(error);

@@ -18,7 +18,6 @@ from .schemas import server_list_docs
 # Create your views here.
 
 class ServerView(APIView):
-    permission_classes = [IsAuthenticated]
     @server_list_docs
     def get(self, request):
         """
@@ -110,7 +109,8 @@ class ServerView(APIView):
             })
         else:
             serializer = ServerSerializer(instance=query_server, many=True)
-            return Response({
-                'data': serializer.data,
-                'message': 'All servers are fetched successfully'
-            })
+            # return Response({
+            #     'data': serializer.data,
+            #     'message': 'All servers are fetched successfully'
+            # })
+            return Response(serializer.data)

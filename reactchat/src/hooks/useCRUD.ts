@@ -9,11 +9,11 @@ interface IuseCrud<T> {
     isLoading: boolean;
 }
 
-const useCRUD = <T>(initalData: T[], apiURL: string): IuseCrud<T> => {
+const useCRUD = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
     const jwtAxios = useAxiosWithInterceptor();
-    const [dataCRUD, setDataCRUD] = useState<T[]>(initalData);
-    const [error, setError] = useState<Error | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [dataCRUD, setDataCRUD] = useState<T[]>(initialData)
+    const [error, setError] = useState<Error | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const fetchData = async () => {
         setIsLoading(true);
