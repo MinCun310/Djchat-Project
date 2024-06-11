@@ -8,14 +8,24 @@ from django.db.models import Count
 
 from .models import Server, Category
 
-from .serializers import ServerSerializer
+from .serializers import ServerSerializer, CategorySerializer
 
 from .mixins import CustomPermissionMixin
 
 from .schemas import server_list_docs
 
+from drf_spectacular.utils import extend_schema
+
 
 # Create your views here.
+
+class CategoryView(APIView):
+    @extend_schema(responses=CategorySerializer)
+    def get(self, request):
+        query_category = Category.objects.all()
+        serializer = CategorySerializer(instance=query_category, many=True)
+        return Response(serializer.data)
+
 
 class ServerView(APIView):
     @server_list_docs

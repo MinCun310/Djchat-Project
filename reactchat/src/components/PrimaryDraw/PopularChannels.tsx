@@ -28,8 +28,15 @@ const PopularChannels: React.FC<Props> = ({open}) => {
     }, []);
 
     return (<>
-        <Box sx={{height: 50, p: 2, display: 'flex', alignItems: 'center', flex: '1 1 100%', backgroundColor: 'blue'}}>
-            <Typography sx={{display: open ? 'block' : 'none'}}>Popular Channels</Typography>
+        <Box sx={{
+            height: 50,
+            p: 2,
+            display: 'flex',
+            alignItems: 'center',
+            flex: '1 1 100%',
+            backgroundColor: 'inherit'
+        }}>
+            <Typography sx={{display: open ? 'block' : 'none'}}>Popular</Typography>
         </Box>
         <List>
             {dataCRUD.map((item) => (

@@ -1,18 +1,13 @@
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
+import React from "react";
 
-import useAxiosWithInterceptor from '../../helpers/jwtinterceptor.tsx';
+type SecondaryDrawProps = {
+    children: React.ReactNode;
+};
 
-
-const SecondaryDraw = () => {
+const SecondaryDraw = ({children}: SecondaryDrawProps) => {
     const theme = useTheme();
-    const jwtAxios = useAxiosWithInterceptor();
-
-    jwtAxios.get('http://127.0.0.1:8000/api/djchat/server').then((response) => {
-        console.log(response.data);
-    }).catch((error) => {
-        console.log(error);
-    })
 
     return (
         <Box
@@ -25,11 +20,7 @@ const SecondaryDraw = () => {
                 overflow: "auto",
             }}
         >
-            {[...Array(50)].map((_, i) => (
-                <Typography key={i} paragraph>
-                    {i + 1}
-                </Typography>
-            ))}
+            {children}
         </Box>
     );
 };

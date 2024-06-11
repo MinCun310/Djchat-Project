@@ -93,11 +93,6 @@ const PrimaryDraw: React.FC<Props> = ({children}) => {
                         handleDrawerClose={handleDrawerClose}
                         handleDrawerOpen={handleDrawerOpen}
                     />
-                    {[...Array(50)].map((_, i) => (
-                        <Typography key={i} paragraph>
-                            {i + 1}
-                        </Typography>
-                    ))}
                 </Box>
                 {React.Children.map(children, (child) => {
                     return React.isValidElement(child)
