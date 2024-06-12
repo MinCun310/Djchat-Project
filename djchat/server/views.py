@@ -2,19 +2,30 @@ from django.shortcuts import render
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from django.db.models import Count
 
 from .models import Server, Category
 
-from .serializers import ServerSerializer
+from .serializers import ServerSerializer, CategorySerializer
 
 from .mixins import CustomPermissionMixin
 
 from .schemas import server_list_docs
 
+from drf_spectacular.utils import extend_schema
+
 
 # Create your views here.
+
+class CategoryView(APIView):
+    @extend_schema(responses=CategorySerializer)
+    def get(self, request):
+        query_category = Category.objects.all()
+        serializer = CategorySerializer(instance=query_category, many=True)
+        return Response(serializer.data)
+
 
 class ServerView(APIView):
     @server_list_docs
@@ -108,7 +119,8 @@ class ServerView(APIView):
             })
         else:
             serializer = ServerSerializer(instance=query_server, many=True)
-            return Response({
-                'data': serializer.data,
-                'message': 'All servers are fetched successfully'
-            })
+            # return Response({
+            #     'data': serializer.data,
+            #     'message': 'All servers are fetched successfully'
+            # })
+            return Response(serializer.data)

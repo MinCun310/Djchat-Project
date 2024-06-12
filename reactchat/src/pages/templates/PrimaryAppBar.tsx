@@ -2,6 +2,8 @@ import {AppBar, Toolbar, Typography, Link, IconButton, Box, Drawer, useMediaQuer
 import {useTheme} from "@mui/material/styles";
 import MenuIcon from '@mui/icons-material/Menu'
 import {useEffect, useState} from "react";
+import ExploreCategories from "../../components/SecondaryDraw/ExploreCategories.tsx";
+import AccountButton from "../../components/PrimaryAppBar/AccountButton.tsx";
 
 const PrimaryAppBar = () => {
     const [sideMenu, setSideMenu] = useState(false);
@@ -25,6 +27,15 @@ const PrimaryAppBar = () => {
             setSideMenu(open);
         };
 
+    const list = () => {
+        return (
+            <Box sx={{paddingTop: `${theme.primaryAppBar.height}px`, minWidth: 200}} role='presentation'
+                 onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
+                <ExploreCategories/>
+            </Box>
+        )
+    };
+
     return (
         <AppBar sx={{
             zIndex: (theme) => theme.zIndex.drawer + 2,
@@ -46,11 +57,7 @@ const PrimaryAppBar = () => {
                 </Box>
 
                 <Drawer anchor='left' open={sideMenu} onClose={toggleDrawer(false)}>
-                    {[...Array(100)].map((_, i) => (
-                        <Typography key={i} paragraph>
-                            {i + 1}
-                        </Typography>
-                    ))}
+                    {list()}
                 </Drawer>
 
                 <Link href='/' underline='none' color='inherit'>
@@ -63,6 +70,8 @@ const PrimaryAppBar = () => {
                         DJCHAT
                     </Typography>
                 </Link>
+                <Box sx={{flexGrow: 1}}></Box>
+                <AccountButton />
             </Toolbar>
         </AppBar>
     )
