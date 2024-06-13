@@ -19,10 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from webchat import MyConsumer
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/djchat/', include('server.urls')),
 ]
+
+websocket_urlpatterns = [path('ws/test/', MyConsumer.as_asgi())]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
