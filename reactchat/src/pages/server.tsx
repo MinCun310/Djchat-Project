@@ -1,37 +1,54 @@
-import useWebSocket from "react-use-websocket";
-import {useState} from "react";
-
-const socketUrl= 'ws://127.0.0.1:8000/ws/test/';
+import {Box, CssBaseline} from "@mui/material";
+import PrimaryAppBar from "./templates/PrimaryAppBar";
+import PrimaryDraw from "./templates/PrimaryDraw";
+import SecondaryDraw from "./templates/SecondaryDraw";
+import Main from "./templates/Main";
+import MessageInterface from "../components/Main/MessageInterface.tsx";
+import ServerChannels from '../components/SecondaryDraw/ServerChannels.tsx';
+import UserServers from '../components/PrimaryDraw/UserServers.tsx';
+import {useNavigate, useParams} from "react-router-dom";
+import useCRUD from "../hooks/useCRUD.ts";
+import {Server} from "../@types/server.d";
+import {useEffect} from "react";
 
 const Server = () => {
-    const [message, setMessage] = useState('');
-    const [inputValue, setInputValue] = useState('');
-    const {sendJsonMessage} = useWebSocket(socketUrl, {
-        onOpen: () => {
-            console.log("Connected!");
-        },
-        onClose: () => {
-            console.log("Closed!");
-        },
-        onError: () => {
-            console.log("Error!");
-        },
-        onMessage: (msg)=>{
-            setMessage(msg.data);
+
+        const navigate = useNavigate();
+        const {serverId, channelId} = useParams();
+
+        const {dataCRUD, error, isLoading, fetchData} = useCRUD<Server>(
+            [],
+            `/djchat/server/?server_id=${serverId}/`
+        );
+
+        if (error !== null && error.message === '400') {
+            navigate('/');
+            return null;
         }
-    });
 
-    const sendInputValue = () => {
-        const message = {text: inputValue};
-        sendJsonMessage(message);
-        setInputValue('');
 
+        // const isChannel = (): boolean => {
+        //     if (channelId) {
+        //         return true;
+        //     }
+        //     return dataCRUD.some((server) => server.channel_server.some((channel) => channel.id === parseInt(channelId)));
+        // };
+
+        return (
+            <Box sx={{display: "flex"}}>
+                <CssBaseline/>
+                <PrimaryAppBar/>
+                <PrimaryDraw>
+                    <UserServers open={false} data={dataCRUD}/>
+                </PrimaryDraw>
+                <SecondaryDraw>
+                    <ServerChannels/>
+                </SecondaryDraw>
+                <Main>
+                    <MessageInterface/>
+                </Main>
+            </Box>
+        );
     }
-
-    return <div>
-        <input type="text" value={inputValue} onChange={(e)=>setInputValue(e.target.value)}/>
-        <button onClick={sendInputValue}>Send Hello</button>
-        <div>Recived Data: {message}</div>
-    </div>
-};
+;
 export default Server;

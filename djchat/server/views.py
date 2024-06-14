@@ -57,25 +57,27 @@ class ServerView(APIView):
             query_category_server = query_server.filter(category__name=param_category)
             if query_category_server.exists():
                 serializer = ServerSerializer(instance=query_category_server, many=True)
-                return Response({
-                    'data': serializer.data,
-                    'message': 'Server is fetched successfully by category'
-                })
+                return Response(serializer.data)
+                # return Response({
+                #     'data': serializer.data,
+                #     'message': 'Server is fetched successfully by category'
+                # })
             else:
                 return Response({
                     'message': f'Server with category {param_category} does not exist'
                 })
         elif param_serverId:
-            if not request.user.is_authenticated:
-                raise AuthenticationFailed('User is not authenticated')
+            # if not request.user.is_authenticated:
+            #     raise AuthenticationFailed('User is not authenticated')
             try:
                 query_serverId = query_server.filter(id=param_serverId)
                 if query_serverId.exists():
                     serializer = ServerSerializer(instance=query_serverId, many=True)
-                    return Response({
-                        'data': serializer.data,
-                        'message': 'Server is fetched successfully by id'
-                    })
+                    return Response(serializer.data)
+                    # return Response({
+                    #     'data': serializer.data,
+                    #     'message': 'Server is fetched successfully by id'
+                    # })
                 else:
                     return Response({
                         'message': f'Server with id {param_serverId} does not exist'
@@ -89,10 +91,11 @@ class ServerView(APIView):
                 print('check is_authenticated: ', request.user.is_authenticated)
                 if query_user_server.exists():
                     serializer = ServerSerializer(instance=query_user_server, many=True)
-                    return Response({
-                        'data': serializer.data,
-                        'message': 'Server is fetched successfully by user'
-                    })
+                    return Resposne(serializer.data)
+                    # return Response({
+                    #     'data': serializer.data,
+                    #     'message': 'Server is fetched successfully by user'
+                    # })
                 else:
                     return Response({
                         'message': f'Server with user {param_user} does not exist'
@@ -104,19 +107,21 @@ class ServerView(APIView):
                 query_quantity_server = query_server.order_by('-id')[:int(param_quantity)]
                 if query_quantity_server.exists():
                     serializer = ServerSerializer(instance=query_quantity_server, many=True)
-                    return Response({
-                        'data': serializer.data,
-                        'message': 'Server is fetched successfully by quantity'
-                    })
+                    return Response(serializer.data)
+                    # return Response({
+                    #     'data': serializer.data,
+                    #     'message': 'Server is fetched successfully by quantity'
+                    # })
             except ValueError:
                 raise ValidationError('quantity must be an integer')
         elif with_num_members:
             query_server = query_server.annotate(num_members=Count('member'))
             serializer = ServerSerializer(instance=query_server, many=True, context={'num_members': True})
-            return Response({
-                'data': serializer.data,
-                'message': 'All servers are fetched successfully with num_members = true'
-            })
+            return Response(serializer.data)
+            # return Response({
+            #     'data': serializer.data,
+            #     'message': 'All servers are fetched successfully with num_members = true'
+            # })
         else:
             serializer = ServerSerializer(instance=query_server, many=True)
             # return Response({
