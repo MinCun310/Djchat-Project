@@ -4,7 +4,6 @@ export interface Server {
     description: string;
     icon: string;
     category: string;
-    banner: string;
     channel_server: {
         id: number;
         name: string;
