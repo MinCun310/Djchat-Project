@@ -43,7 +43,7 @@ const ServerChannels = (props: ServerChannelsProps) => {
                         whiteSpace: "nowrap",
                     }}
                 >
-                    {server_name}
+                    Chat with {server_name}
                 </Typography>
             </Box>
             <List sx={{py: 0}}>

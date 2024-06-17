@@ -24,6 +24,7 @@ from webchat.consumers import MyConsumer
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/djchat/', include('server.urls')),
+    path('api/messages/', include('webchat.urls')),
 ]
 
 websocket_urlpatterns = [path('<str:serverId>/<str:channelId>', MyConsumer.as_asgi())]

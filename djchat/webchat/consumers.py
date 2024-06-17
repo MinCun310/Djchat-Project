@@ -30,7 +30,8 @@ class MyConsumer(JsonWebsocketConsumer):
         sender = self.user
         message = content['message']
 
-        conversation = Conversation.objects.get_or_create(channel_id=channel_id)
+        conversation, created = Conversation.objects.get_or_create(channel_id=channel_id)
+        print('conversation: ', conversation)
 
         new_message = Message.objects.create(conversation=conversation, sender=sender, content=message)
 
