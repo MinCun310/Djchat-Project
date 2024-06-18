@@ -3,7 +3,10 @@ import useWebSocket from "react-use-websocket";
 import {useParams} from "react-router-dom";
 import useCRUD from "../../hooks/useCRUD.ts";
 import {Server} from "../../@types/server";
-import {Box, Typography} from "@mui/material";
+import {Box, List, ListItem, ListItemText, Typography} from "@mui/material";
+import MessageInterfaceChannels from "./MessageInterfaceChannels.tsx";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
 
 
 interface ServerChannelProps {
@@ -54,6 +57,7 @@ const messageInterface = (props: ServerChannelProps) => {
 
         return (
             <>
+                <MessageInterfaceChannels data={data}/>
                 {channelId == undefined ? (
                     <Box sx={{
                         overflow: 'hidden',
@@ -69,34 +73,85 @@ const messageInterface = (props: ServerChannelProps) => {
                         </Box>
                     </Box>
                 ) : <>
-                    <div>
-                        {newMessage.map((msg: Message, index: number) => {
-                            return (
-                                <div key={index}>
-                                    <p><strong>Sender:</strong> {msg.sender}</p>
-                                    <p><strong>Content:</strong> {msg.content}</p>
-                                    <p><strong>Timestamp:</strong> {msg.timestamp}</p>
-                                </div>
-                            );
-                        })}
-                        <form>
-                            <label>
-                                Enter Message:
-                                <input
-                                    type="text"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                />
-                            </label>
-                        </form>
-                        <button
-                            onClick={() => {
-                                sendJsonMessage({type: "message", message});
-                            }}
-                        >
-                            Send Message
-                        </button>
-                    </div>
+                    <Box sx={{
+                        overflow: 'hidden',
+                        p: 0,
+                        height: `calc(100vh-100px)`
+                    }}>
+                        <List sx={{width: '100%', bgcolor: 'background.paper'}}>
+                            {newMessage.map((msg: Message, index: number) => {
+                                return (
+                                    <ListItem key={index} alignItems='flex-start'>
+                                        <ListItemAvatar>
+                                            <Avatar alt='user image'/>
+                                        </ListItemAvatar>
+                                        <ListItemText primaryTypographyProps={{fontSize: '12px', variant: 'body2'}}
+                                                      primary={
+                                                          <Typography
+                                                              component='span'
+                                                              variant='body1'
+                                                              color='text.primary'
+                                                              sx={{
+                                                                  display: 'inline',
+                                                                  fontW: 600
+                                                              }}>
+                                                              {msg.sender}
+                                                          </Typography>}
+                                                      secondary={
+                                                          <Box>
+                                                              <Typography variant='body1'
+                                                                          style={{
+                                                                              overflow: 'visible',
+                                                                              whiteSpace: 'normal',
+                                                                              textOverflow: 'clip'
+                                                                          }}
+                                                                          sx={{
+                                                                              display: 'inline',
+                                                                              lineHeight: 1.2,
+                                                                              fontW: 400,
+                                                                              letterSpacing: '-0.2px'
+                                                                          }}
+                                                                          component='span'
+                                                                          color='text.primary'
+                                                              >
+                                                                  {msg.content}
+                                                              </Typography>
+                                                          </Box>
+                                                      }/>
+                                    </ListItem>
+                                )
+                                    ;
+                            })}
+                        </List>
+                    </Box>
+                    {/*<div>*/}
+                    {/*    {newMessage.map((msg: Message, index: number) => {*/}
+                    {/*        return (*/}
+                    {/*            <div key={index}>*/}
+                    {/*                <p><strong>Sender:</strong> {msg.sender}</p>*/}
+                    {/*                <p><strong>Content:</strong> {msg.content}</p>*/}
+                    {/*                <p><strong>Timestamp:</strong> {msg.timestamp}</p>*/}
+                    {/*            </div>*/}
+                    {/*        );*/}
+                    {/*    })}*/}
+                    {/*    <form>*/}
+                    {/*        <label>*/}
+                    {/*            Enter Message:*/}
+                    {/*            <input*/}
+                    {/*                type="text"*/}
+                    {/*                value={message}*/}
+                    {/*                onChange={(e) => setMessage(e.target.value)}*/}
+                    {/*            />*/}
+                    {/*        </label>*/}
+                    {/*    </form>*/}
+                    {/*    <button*/}
+                    {/*        onClick={() => {*/}
+                    {/*            sendJsonMessage({type: "message", message});*/}
+                    {/*        }}*/}
+                    {/*    >*/}
+                    {/*        Send Message*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
                 </>
                 }
             </>
