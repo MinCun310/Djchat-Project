@@ -12,7 +12,6 @@ const DrawerToggle: React.FC<Props> = ({open, handleDrawerClose, handleDrawerOpe
         <Box sx={{height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
                 {open ? <ChevronLeft/> : <ChevronRight/>}
-                <ChevronLeft/>
             </IconButton>
         </Box>
     );
