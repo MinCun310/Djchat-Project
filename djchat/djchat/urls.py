@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/djchat/', include('server.urls')),
     path('api/messages/', include('webchat.urls')),
+    path('api/auth/', include('account.urls'))
 ]
 
 websocket_urlpatterns = [path('<str:serverId>/<str:channelId>', MyConsumer.as_asgi())]

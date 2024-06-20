@@ -3,6 +3,10 @@ import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} fr
 import ToggleColorMode from "./components/ToggleColorMode.tsx";
 import Explore from "./pages/explore.tsx";
 import Server from "./pages/server.tsx";
+import Login from "./pages/login.tsx";
+import {AuthServiceProvider} from "./context/AuthContext.tsx";
+import TestLogin from "./pages/testLogin.tsx";
+import ProtectedRoute from "./services/ProtectedRoute.tsx";
 
 
 const router = createBrowserRouter(
@@ -11,15 +15,26 @@ const router = createBrowserRouter(
             <Route path="/" element={<Home/>}/>
             <Route path="/server/:serverId?/:channelId?" element={<Server/>}/>
             <Route path="/explore/:categoryName" element={<Explore/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route
+                path="/testlogin"
+                element={
+                    <ProtectedRoute>
+                        <TestLogin/>
+                    </ProtectedRoute>
+                }
+            />
         </Route>
     )
 )
 
 const App = () => {
     return (
-        <ToggleColorMode>
-            <RouterProvider router={router}/>
-        </ToggleColorMode>
+        <AuthServiceProvider>
+            <ToggleColorMode>
+                <RouterProvider router={router}/>
+            </ToggleColorMode>
+        </AuthServiceProvider>
     );
 }
 export default App

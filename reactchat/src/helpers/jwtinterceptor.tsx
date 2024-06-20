@@ -14,9 +14,27 @@ const useAxiosWithInterceptor = ():AxiosInstance => {
         },
         async (error) => {
             const originalRequest = error.config;
-            if (error.response?.status === 401){
-                const goRoot = () => navigate('/');
-                goRoot()
+            if (error.response?.status === 401 || 403) {
+                const refreshToken = localStorage.getItem('refresh_token');
+                if (refreshToken) {
+                    try {
+                        const refreshTokenResponse = await axios.post(
+                            'http://127.0.0.1:8000/api/auth/token/refresh/',
+                            {
+                                refresh: refreshToken
+                            }
+                        )
+                        const newAccessToken = refreshTokenResponse.data.access
+                        localStorage.setItem('access_token', newAccessToken);
+                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+                        return jwtAxios.request(originalRequest)
+                    } catch (refreshError) {
+                        navigate('/login')
+                        throw refreshError;
+                    }
+                } else {
+                    navigate('/login')
+                }
             }
             throw error;
         }
@@ -24,3 +42,4 @@ const useAxiosWithInterceptor = ():AxiosInstance => {
     return jwtAxios;
 }
 export default useAxiosWithInterceptor;
+
