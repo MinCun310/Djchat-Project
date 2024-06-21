@@ -10,14 +10,12 @@ const TestLogin = () => {
 
     const getUserDetails = async () => {
         try {
-            const userId = localStorage.getItem("userId")
-            const accessToken = localStorage.getItem("access_token")
+            // const userId = localStorage.getItem("userId")
+            // const accessToken = localStorage.getItem("access_token")
             const response = await jwtAxios.get(
-                `http://127.0.0.1:8000/api/auth/account/?userId=${userId}`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
+                `http://127.0.0.1:8000/api/auth/account/?userId=1`,
+                {withCredentials: true}
+            );
             const userDetails = response.data;
             setUsername(userDetails[0].username);
         } catch (err: any) {
