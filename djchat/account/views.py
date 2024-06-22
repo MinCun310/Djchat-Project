@@ -5,11 +5,11 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from account.models import Account
 from account.schemas import user_list_docs
-from account.serializers import AccountSerializer, CustomTokenObtainPairSerializer
+from account.serializers import AccountSerializer, CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
 
 
 # Create your views here.
@@ -55,13 +55,17 @@ class JWTSetCookieMixin:
                 samesite=settings.SIMPLE_JWT["JWT_COOKIE_SAMESITE"],
             )
 
-        user_id = response.data['user_id']
-        print('user_id: ', user_id)
+            # del response.data["access"]
 
-        # del response.data["access"]
+        # user_id = response.data['user_id']
+        # print('user_id: ', user_id)
 
         return super().finalize_response(request, response, *args, **kwargs)
 
 
 class JWTCookieTokenObtainPairView(JWTSetCookieMixin, TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+class JWTCookieTokenRefreshView(JWTSetCookieMixin, TokenRefreshView):
+    serializer_class = CustomTokenRefreshSerializer

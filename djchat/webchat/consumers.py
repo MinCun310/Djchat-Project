@@ -20,6 +20,8 @@ class MyConsumer(JsonWebsocketConsumer):
     def connect(self):
         self.accept()
         self.channel_id = self.scope['url_route']['kwargs']['channelId']
+        print('Connecting to', self.channel_id)
+        print('--------------------------------', self.scope)
 
         self.user = User.objects.get(id=1)
 

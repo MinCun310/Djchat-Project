@@ -5,12 +5,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from account.views import AccountView, JWTCookieTokenObtainPairView
+from account.views import AccountView, JWTCookieTokenObtainPairView, JWTCookieTokenRefreshView
 
 urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('schema/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
     path('token/', JWTCookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/refresh/', JWTCookieTokenRefreshView.as_view(), name='token_refresh'),
     path('account/', AccountView.as_view(), name='user')
 ]
