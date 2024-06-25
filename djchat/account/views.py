@@ -54,8 +54,8 @@ class JWTSetCookieMixin:
                 httponly=True,
                 samesite=settings.SIMPLE_JWT["JWT_COOKIE_SAMESITE"],
             )
-
-            # del response.data["access"]
+            # Xóa access token để đảm bảo token chỉ tồn tai trong cookie
+            del response.data["access"]
 
         # user_id = response.data['user_id']
         # print('user_id: ', user_id)

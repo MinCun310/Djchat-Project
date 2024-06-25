@@ -6,7 +6,7 @@ import {useAuthService} from "../services/AuthServices.ts";
 const API_BASE_URL = BASE_URL;
 
 const useAxiosWithInterceptor = (): AxiosInstance => {
-    const jwtAxios = axios.create({baseURL: API_BASE_URL});
+    const jwtAxios = axios.create({});
     const navigate = useNavigate();
     const {logout} = useAuthService();
 
@@ -25,8 +25,6 @@ const useAxiosWithInterceptor = (): AxiosInstance => {
                     if (response['status'] === 200) {
                         return jwtAxios(originalRequest);
                     }
-
-                    return jwtAxios.request(originalRequest)
                 } catch (refreshError) {
                     logout();
                     const goLogin = () => navigate('/login')
@@ -34,7 +32,6 @@ const useAxiosWithInterceptor = (): AxiosInstance => {
                     return Promise.reject(refreshError);
                 }
             }
-            throw error;
         }
     )
     return jwtAxios;
