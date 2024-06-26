@@ -5,17 +5,19 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
 
-user = get_user_model()
+User = get_user_model()
 
 
 @database_sync_to_async
 def get_user(scope):
-    token = scope['token']
-    user_id = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])['user_id']
-
+    token = scope["token"]
     try:
-        return user.objects.get(id=user_id)
-    except user.DoesNotExist:
+        if token:
+            user_id = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])["user_id"]
+            return User.objects.get(id=user_id)
+        else:
+            return AnonymousUser()
+    except (jwt.exceptions.DecodeError, User.DoesNotExist):
         return AnonymousUser()
 
 
@@ -44,6 +46,10 @@ class JWTAuthMiddleWare:
         print('cookie_dict:::', cookie_dict)
         # Lấy access token
         access_token = cookie_dict.get('access_token')
+        # Gán access token vào scope['token']
         scope['token'] = access_token
+        # Cho scope['token'] vào hàm get_user để lấy user
         scope['user'] = await get_user(scope)
+        # Kiếm tra lại scope lúc này sẽ cập nhật thêm scope['token'] và scope['token']
+        print('check lại scope: ----', scope)
         return await self.app(scope, receive, send)

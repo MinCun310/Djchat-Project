@@ -1,9 +1,13 @@
 import {AuthServiceProps} from "../@types/auth-service";
 import axios from "axios";
 import {useState} from "react";
+import {BASE_URL} from "../config.ts";
+import {useNavigate} from "react-router-dom";
 
 
 export const useAuthService: AuthServiceProps = () => {
+
+    const navigate = useNavigate();
 
     const getInitialLoggedInValue = () => {
         const loggedIn = localStorage.getItem("isLoggedIn");
@@ -16,7 +20,7 @@ export const useAuthService: AuthServiceProps = () => {
         try {
             const userId = localStorage.getItem("user_id")
             const response = await axios.get(
-                `http://127.0.0.1:8000/api/auth/account/?userId=${userId}`,
+                `${BASE_URL}/auth/account/?userId=${userId}`,
                 {withCredentials: true}
             );
             const userDetails = response.data;
@@ -44,7 +48,7 @@ export const useAuthService: AuthServiceProps = () => {
     const login = async (username: string, password: string) => {
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/auth/token/", {
+                `${BASE_URL}/auth/token/`, {
                     username,
                     password,
                 }, {withCredentials: true}
@@ -61,14 +65,35 @@ export const useAuthService: AuthServiceProps = () => {
         }
     }
 
-    const logout = () => {
+    const refreshAccessToken = async () => {
+        try {
+            await axios.post(
+                `${BASE_URL}/auth/token/refresh/`, {},
+                {withCredentials: true}
+            );
+        } catch (refreshError) {
+            return Promise.reject(refreshError)
+        }
+    }
+
+    const logout = async () => {
         localStorage.setItem("isLoggedIn", "false");
         localStorage.removeItem("user_id");
         localStorage.removeItem("username");
         setIsLoggedIn(false);
+        navigate('/login');
+
+        try {
+            await axios.post(
+                `${BASE_URL}/auth/logout/`, {},
+                {withCredentials: true}
+            );
+        } catch (refreshError) {
+            return Promise.reject(refreshError)
+        }
 
     }
 
-    return {login, isLoggedIn, logout}
+    return {login, isLoggedIn, logout, refreshAccessToken}
 }
 export default useAuthService;

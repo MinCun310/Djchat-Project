@@ -14,6 +14,15 @@ from account.serializers import AccountSerializer, CustomTokenObtainPairSerializ
 
 # Create your views here.
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        response = Response("Log out successfully")
+        response.delete_cookie(settings.SIMPLE_JWT["ACCESS_TOKEN_NAME"])
+        response.delete_cookie(settings.SIMPLE_JWT["REFRESH_TOKEN_NAME"])
+        return response
+
 
 class AccountView(APIView):
     permission_classes = [IsAuthenticated]

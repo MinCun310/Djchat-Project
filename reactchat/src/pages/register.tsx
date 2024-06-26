@@ -1,11 +1,10 @@
-import {useFormik} from 'formik';
+import {useFormik} from "formik";
 import {useNavigate} from "react-router-dom";
-import {useAuthServiceContext} from "../context/AuthContext.tsx";
-import Container from "@mui/material/Container";
-import {Box, Button, TextField, Typography} from "@mui/material";
+import {useAuthServiceContext} from "../context/AuthContext";
+import {Box, Button, Container, TextField, Typography} from "@mui/material";
 
-const Login = () => {
-    const {login} = useAuthServiceContext();
+const Register = () => {
+    const {register} = useAuthServiceContext();
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -24,15 +23,19 @@ const Login = () => {
         },
         onSubmit: async (values) => {
             const {username, password} = values;
-            const status = await login(username, password);
-            if (status === 401) {
+            const status = await register(username, password);
+            if (status === 409) {
+                formik.setErrors({
+                    username: "Invalid username",
+                });
+            } else if (status === 401) {
                 console.log("Unauthorised");
                 formik.setErrors({
                     username: "Invalid username or password",
                     password: "Invalid username or password",
                 });
             } else {
-                navigate("/");
+                navigate("/login");
             }
         },
     });
@@ -55,7 +58,7 @@ const Login = () => {
                         pb: 2,
                     }}
                 >
-                    Sign in
+                    Register
                 </Typography>
                 <Box component="form" onSubmit={formik.handleSubmit} sx={{mt: 1}}>
                     <TextField
@@ -92,32 +95,7 @@ const Login = () => {
                 </Box>
             </Box>
         </Container>
+    );
+};
 
-
-
-        // <div>
-        //     <h1>Login</h1>
-        //     <form onSubmit={formik.handleSubmit}>
-        //         <label htmlFor="username">Username</label>
-        //         <input
-        //             type="text"
-        //             name="username"
-        //             id="username"
-        //             onChange={formik.handleChange}
-        //             value={formik.values.username}
-        //         />
-        //         <label htmlFor="password">Password</label>
-        //         <input
-        //             type="password"
-        //             name="password"
-        //             id="password"
-        //             onChange={formik.handleChange}
-        //             value={formik.values.password}
-        //         />
-        //         <button type="submit">Login</button>
-        //         <button onClick={() => navigate('/register')}>Register</button>
-        //     </form>
-        // </div>
-    )
-}
-export default Login;
+export default Register;
