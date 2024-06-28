@@ -1,25 +1,41 @@
 import Home from './pages/home'
-import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from 'react-router-dom';
+import {Route, BrowserRouter, Routes} from 'react-router-dom';
 import ToggleColorMode from "./components/ToggleColorMode.tsx";
 import Explore from "./pages/explore.tsx";
 import Server from "./pages/server.tsx";
-
-
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/server/:serverId?/:channelId?" element={<Server/>}/>
-            <Route path="/explore/:categoryName" element={<Explore/>}/>
-        </Route>
-    )
-)
+import Login from "./pages/login.tsx";
+import {AuthServiceProvider} from "./context/AuthContext.tsx";
+import TestLogin from "./pages/testLogin.tsx";
+import ProtectedRoute from "./services/ProtectedRoute.tsx";
+import Register from "./pages/register.tsx";
 
 const App = () => {
     return (
-        <ToggleColorMode>
-            <RouterProvider router={router}/>
-        </ToggleColorMode>
+        <BrowserRouter>
+            <AuthServiceProvider>
+                <ToggleColorMode>
+                    <Routes>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/server/:serverId?/:channelId?" element={
+                            <ProtectedRoute>
+                                <Server/>
+                            </ProtectedRoute>
+                        }/>
+                        <Route path="/explore/:categoryName" element={<Explore/>}/>
+                        <Route path='/login' element={<Login/>}/>
+                        <Route path="/register" element={<Register/>}/>
+                        <Route
+                            path="/testlogin"
+                            element={
+                                <ProtectedRoute>
+                                    <TestLogin/>
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </ToggleColorMode>
+            </AuthServiceProvider>
+        </BrowserRouter>
     );
 }
 export default App

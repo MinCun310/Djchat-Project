@@ -25,9 +25,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/djchat/', include('server.urls')),
     path('api/messages/', include('webchat.urls')),
+    path('api/auth/', include('account.urls'))
 ]
 
 websocket_urlpatterns = [path('<str:serverId>/<str:channelId>', MyConsumer.as_asgi())]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
