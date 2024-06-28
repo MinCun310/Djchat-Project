@@ -5,9 +5,9 @@ import {BASE_URL} from "../config.ts";
 import {useNavigate} from "react-router-dom";
 
 
-export const useAuthService: AuthServiceProps = () => {
+export function useAuthService(): AuthServiceProps {
 
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const getInitialLoggedInValue = () => {
         const loggedIn = localStorage.getItem("isLoggedIn");
@@ -20,11 +20,13 @@ export const useAuthService: AuthServiceProps = () => {
         try {
             const userId = localStorage.getItem("user_id")
             const response = await axios.get(
-                `${BASE_URL}/auth/account/?userId=${userId}`,
-                {withCredentials: true}
+                `${BASE_URL}/auth/account/?user_id=${userId}`,
+                {
+                    withCredentials: true
+                }
             );
-            const userDetails = response.data;
-            localStorage.setItem("username", userDetails[0].username);
+            const userDetails = response.data
+            localStorage.setItem("username", userDetails.username);
             setIsLoggedIn(true);
             localStorage.setItem("isLoggedIn", "true")
         } catch (err: any) {
@@ -33,17 +35,6 @@ export const useAuthService: AuthServiceProps = () => {
             return err;
         }
     }
-
-    // const getUserIdFromToken = (access: string) => {
-    //     const token = access
-    //     const tokenParts = token.split('.')
-    //     const encodedPayLoad = tokenParts[1]
-    //     const decodedPayLoad = atob(encodedPayLoad)
-    //     const payLoadData = JSON.parse(decodedPayLoad)
-    //     const userId = payLoadData.user_id
-    //
-    //     return userId
-    // }
 
     const login = async (username: string, password: string) => {
         try {
@@ -54,9 +45,9 @@ export const useAuthService: AuthServiceProps = () => {
                 }, {withCredentials: true}
             );
 
-            const user_id = response.data.user_id;
+            const user_id = response.data.user_id
             localStorage.setItem("isLoggedIn", "true")
-            localStorage.setItem('user_id', user_id)
+            localStorage.setItem("user_id", user_id)
             setIsLoggedIn(true)
             getUserDetails()
 
@@ -68,32 +59,45 @@ export const useAuthService: AuthServiceProps = () => {
     const refreshAccessToken = async () => {
         try {
             await axios.post(
-                `${BASE_URL}/auth/token/refresh/`, {},
-                {withCredentials: true}
-            );
+                `${BASE_URL}/auth/token/refresh/`, {}, {withCredentials: true}
+            )
         } catch (refreshError) {
             return Promise.reject(refreshError)
         }
     }
 
+    const register = async (username: string, password: string) => {
+        try {
+            const response = await axios.post(
+                `${BASE_URL}/auth/register/`, {
+                    username,
+                    password,
+                }, {withCredentials: true}
+            );
+            return response.status
+        } catch (err: any) {
+            return err.response.status;
+        }
+    }
+
+
     const logout = async () => {
-        localStorage.setItem("isLoggedIn", "false");
-        localStorage.removeItem("user_id");
+        localStorage.setItem("isLoggedIn", "false")
+        localStorage.removeItem("user_id")
         localStorage.removeItem("username");
         setIsLoggedIn(false);
-        navigate('/login');
+        navigate("/login")
 
         try {
             await axios.post(
-                `${BASE_URL}/auth/logout/`, {},
-                {withCredentials: true}
-            );
+                `${BASE_URL}/logout/`, {}, {withCredentials: true}
+            )
         } catch (refreshError) {
             return Promise.reject(refreshError)
         }
 
     }
 
-    return {login, isLoggedIn, logout, refreshAccessToken}
+    return {login, isLoggedIn, logout, refreshAccessToken, register}
+
 }
-export default useAuthService;

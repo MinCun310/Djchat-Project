@@ -28,7 +28,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
-
+# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:5173']
+# CORS_ORIGIN_WHITELIST = [
+#     'http://127.0.0.1:5173',
+#
+# ]
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -126,7 +130,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# Để chạy trang admin với template có sẵn trong drf với uvicorn
+# Dùng lệnh `python manage.py collectstatic`
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
@@ -141,7 +149,7 @@ AUTH_USER_MODEL = 'account.Account'
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'account.authenticate.JWTCookieAuthentication',
     ]

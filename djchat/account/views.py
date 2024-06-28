@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -9,7 +10,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from account.models import Account
 from account.schemas import user_list_docs
-from account.serializers import AccountSerializer, CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
+from account.serializers import AccountSerializer, CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, RegisterSerializer
 
 
 # Create your views here.
@@ -22,6 +23,22 @@ class LogoutView(APIView):
         response.delete_cookie(settings.SIMPLE_JWT["ACCESS_TOKEN_NAME"])
         response.delete_cookie(settings.SIMPLE_JWT["REFRESH_TOKEN_NAME"])
         return response
+
+
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            forbidden_username = ['admin', 'root', 'superuser']
+            if username in forbidden_username:
+                return Response({'error': 'Username is not allowed'}, status=status.HTTP_409_CONFLICT)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        errors = serializer.errors
+        if 'username' in errors and 'non_field_errors' not in errors:
+            return Response({'error': 'Username already exists'}, status=status.HTTP_409_CONFLICT)
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AccountView(APIView):

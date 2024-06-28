@@ -12,6 +12,24 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['username', 'password']
+
+    def is_valid(self, raise_exceptions=False):
+        valid = super().is_valid(raise_exception=raise_exceptions)
+        if valid:
+            username = self.validated_data['username']
+            if Account.objects.filter(username=username).exists():
+                self._errors['username'] = ['username already exists']
+                valid = False
+        return valid
+
+    def create(self, validated_data):
+        return Account.objects.create_user(**validated_data)
+
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
