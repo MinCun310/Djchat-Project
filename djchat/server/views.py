@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from rest_framework import status
 from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -91,7 +92,7 @@ class ServerView(APIView):
                 print('check is_authenticated: ', request.user.is_authenticated)
                 if query_user_server.exists():
                     serializer = ServerSerializer(instance=query_user_server, many=True)
-                    return Resposne(serializer.data)
+                    return Response(serializer.data)
                     # return Response({
                     #     'data': serializer.data,
                     #     'message': 'Server is fetched successfully by user'
@@ -129,3 +130,38 @@ class ServerView(APIView):
             #     'message': 'All servers are fetched successfully'
             # })
             return Response(serializer.data)
+
+
+class ServerMembershipView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, server_id):
+        server = get_object_or_404(Server, id=server_id)
+        user = request.user
+        if server.member.filter(id=user.id).exists():
+            return Response({'message': 'User is already a member of the server'}, status=status.HTTP_409_CONFLICT)
+
+        server.member.add(user)
+
+        return Response({'message': 'User joined the server successfully'}, status=status.HTTP_200_OK)
+
+    def delete(self, request, server_id):
+        server = get_object_or_404(Server, id=server_id)
+        user = request.user
+        if not server.member.filter(id=user.id).exists():
+            return Response({'message': 'User is not a member of the server'}, status=status.HTTP_404_NOT_FOUND)
+
+        if server.owner == user:  # check if user is server owner
+            return Response({'message': 'Owners cannot be removed as a member'}, status=status.HTTP_409_CONFLICT)
+
+        server.member.remove(user)
+
+        return Response({'message': 'User is removed from the server...'}, status=status.HTTP_200_OK)
+
+    def get(self, request, server_id):
+        server = get_object_or_404(Server, id=server_id)
+        user = request.user
+
+        is_member = server.member.filter(id=user.id).exists()
+
+        return Response({'is_member': is_member})

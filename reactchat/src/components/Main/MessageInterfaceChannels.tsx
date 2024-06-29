@@ -17,6 +17,7 @@ import ServerChannels from "../SecondaryDraw/ServerChannels.tsx";
 import {useEffect, useState} from 'react';
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ExploreCategories from "../SecondaryDraw/ExploreCategories.tsx";
+import JoinServerButton from "../Membership/JoinServerButton.tsx";
 
 interface ServerChannelProps {
     data: Server[];
@@ -87,6 +88,9 @@ const MessageInterfaceChannels = (props: ServerChannelProps) => {
                     {channelName}
                 </Typography>
                 <Box sx={{flexGrow: 1}}></Box>
+
+                <JoinServerButton />
+
                 <Box sx={{display: {xs: 'block', sm: 'none'}}}>
                     <IconButton color="inherit" onClick={toggleDrawer(true)} edge='end'>
                         <MoreVertIcon/>
