@@ -29,7 +29,7 @@ class MyConsumer(JsonWebsocketConsumer):
         print('Connecting to', self.channel_id)
         self.server_id = self.scope['url_route']['kwargs']['serverId']
 
-        self.user = User.objects.get(id=1)
+        self.user = User.objects.get(id=self.user.id)
 
         server = Server.objects.get(id=self.server_id)
         self.is_member = server.member.filter(id=self.user.id).exists()
