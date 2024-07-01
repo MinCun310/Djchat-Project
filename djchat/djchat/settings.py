@@ -28,11 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
-# CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:5173']
-# CORS_ORIGIN_WHITELIST = [
-#     'http://127.0.0.1:5173',
-#
-# ]
+
 ALLOWED_HOSTS = []
 
 # Application definition

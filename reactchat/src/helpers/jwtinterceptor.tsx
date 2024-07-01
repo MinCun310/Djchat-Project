@@ -32,6 +32,7 @@ const useAxiosWithInterceptor = (): AxiosInstance => {
                     return Promise.reject(refreshError);
                 }
             }
+            return Promise.reject(error);
         }
     )
     return jwtAxios;

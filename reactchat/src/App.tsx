@@ -8,6 +8,8 @@ import {AuthServiceProvider} from "./context/AuthContext.tsx";
 import TestLogin from "./pages/testLogin.tsx";
 import ProtectedRoute from "./services/ProtectedRoute.tsx";
 import Register from "./pages/register.tsx";
+import {MembershipProvider} from "./context/MemberContext.tsx";
+import MembershipCheck from "./components/Membership/MembershipCheck.tsx";
 
 const App = () => {
     return (
@@ -18,7 +20,11 @@ const App = () => {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/server/:serverId?/:channelId?" element={
                             <ProtectedRoute>
-                                <Server/>
+                                <MembershipProvider>
+                                    <MembershipCheck>
+                                        <Server/>
+                                    </MembershipCheck>
+                                </MembershipProvider>
                             </ProtectedRoute>
                         }/>
                         <Route path="/explore/:categoryName" element={<Explore/>}/>
